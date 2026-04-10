@@ -18,7 +18,7 @@ jobs:
 
       - name: Make Daily Change
         run: |
-          echo "Updated on $(date)" >> streak.txt
+          echo "Day $(date +%d-%m-%Y): Consistency maintained" >> streak.txt
 
       - name: Commit and Push
         run: |
