@@ -1,0 +1,26 @@
+name: Daily Streak Commit
+
+on:
+  schedule:
+    - cron: "30 18 * * *"
+  workflow_dispatch:
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Make Daily Change
+        run: |
+          echo "Updated on $(date)" >> streak.txt
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "kprem20"
+          git config --global user.email "kpremsharma2005@gmail.com"
+          git add .
+          git commit -m "Daily auto commit" || echo "No changes"
+          git push
