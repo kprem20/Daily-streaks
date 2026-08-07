@@ -1,61 +1,63 @@
-name: Daily Random Streak
+name: Daily Random Commits
+
+on:
+  schedule:
+    # Daily around 9:00 AM IST
+    - cron: "30 3 * * *"
+
+  workflow_dispatch:
 
 permissions:
   contents: write
 
-on:
-  schedule:
-    - cron: "30 18 * * *"   # Runs once every day
-  workflow_dispatch:
-
 jobs:
-  commit:
+  daily-random-commits:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure Git
+      - name: Create random commits
+        shell: bash
         run: |
-          git config --global user.name "kprem20"
-          git config --global user.email "kpremsharma2005@gmail.com"
+          git config user.name "sandeepbihari2005"
+          git config user.email "sandeepbihari2005@gmail.com"
 
-      - name: Random Commits
-        run: |
-          # Random number of commits (1-20)
-          COMMITS=$((1 + RANDOM % 20))
-
-          messages=(
-            "Update README"
-            "Code cleanup"
+          MESSAGES=(
+            "Update project files"
             "Minor improvements"
-            "Bug fixes"
-            "Refactor project"
+            "Daily maintenance"
+            "Update development log"
+            "Refactor project notes"
+            "Improve documentation"
+            "Routine project update"
+            "Clean up project files"
+            "Update progress log"
+            "Small project improvements"
+            "Code cleanup"
+            "Project maintenance"
             "Documentation update"
-            "Improve project"
-            "Routine maintenance"
-            "Small changes"
-            "Optimize files"
+            "Development progress"
+            "Minor fixes"
           )
 
-          echo "Making $COMMITS commits today..."
+          # Random number between 3 and 12
+          COMMIT_COUNT=$((RANDOM % 10 + 3))
 
-          for ((i=1; i<=COMMITS; i++))
+          echo "Creating $COMMIT_COUNT commits today..."
+
+          for ((i=1; i<=COMMIT_COUNT; i++))
           do
-              echo "$(date '+%Y-%m-%d %H:%M:%S') - Commit $i - $RANDOM" >> streak.txt
+            RANDOM_INDEX=$((RANDOM % ${#MESSAGES[@]}))
+            MESSAGE="${MESSAGES[$RANDOM_INDEX]}"
 
-              git add streak.txt
+            echo "$(date -u '+%Y-%m-%d %H:%M:%S UTC') - Update $i - $MESSAGE - $RANDOM" >> activity-log.txt
 
-              MSG=${messages[$RANDOM % ${#messages[@]}]}
+            git add activity-log.txt
+            git commit -m "$MESSAGE"
 
-              git commit -m "$MSG"
-
-             
-
-              # Wait randomly between 1 and 15 minutes
-              DELAY=$((60 + RANDOM % 781))
-              echo "Waiting $DELAY seconds..."
-              sleep $DELAY
+            sleep 1
           done
+
           git push
