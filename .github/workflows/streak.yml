@@ -1,11 +1,11 @@
-name: Daily Streak Commit
+name: Daily Random Streak
 
 permissions:
   contents: write
 
 on:
   schedule:
-    - cron: "30 18 * * *"
+    - cron: "30 18 * * *"   # Runs once every day
   workflow_dispatch:
 
 jobs:
@@ -14,16 +14,47 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Make Daily Change
-        run: |
-          echo "Day $(date +%d-%m-%Y): Consistency maintained" >> streak.txt
-
-      - name: Commit and Push
+      - name: Configure Git
         run: |
           git config --global user.name "kprem20"
           git config --global user.email "kpremsharma2005@gmail.com"
-          git add .
-          git commit -m "Daily auto commit" || echo "No changes"
-          git push
+
+      - name: Random Commits
+        run: |
+          # Random number of commits (1-20)
+          COMMITS=$((1 + RANDOM % 20))
+
+          messages=(
+            "Update README"
+            "Code cleanup"
+            "Minor improvements"
+            "Bug fixes"
+            "Refactor project"
+            "Documentation update"
+            "Improve project"
+            "Routine maintenance"
+            "Small changes"
+            "Optimize files"
+          )
+
+          echo "Making $COMMITS commits today..."
+
+          for ((i=1; i<=COMMITS; i++))
+          do
+              echo "$(date '+%Y-%m-%d %H:%M:%S') - Commit $i - $RANDOM" >> streak.txt
+
+              git add streak.txt
+
+              MSG=${messages[$RANDOM % ${#messages[@]}]}
+
+              git commit -m "$MSG"
+
+              git push
+
+              # Wait randomly between 1 and 15 minutes
+              DELAY=$((60 + RANDOM % 900))
+              echo "Waiting $DELAY seconds..."
+              sleep $DELAY
+          done
