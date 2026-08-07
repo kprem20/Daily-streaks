@@ -51,10 +51,11 @@ jobs:
 
               git commit -m "$MSG"
 
-              git push
+             
 
               # Wait randomly between 1 and 15 minutes
               DELAY=$((60 + RANDOM % 781))
               echo "Waiting $DELAY seconds..."
               sleep $DELAY
           done
+          git push
