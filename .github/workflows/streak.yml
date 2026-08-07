@@ -21,7 +21,7 @@ jobs:
       - name: Create random commits
         shell: bash
         run: |
-          git config user.name "sandeepbihari2005"
+          git config user.name "kprem20"
           git config user.email "sandeepbihari2005@gmail.com"
 
           MESSAGES=(
